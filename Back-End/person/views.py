@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from person.serializers import PersonSerializer, RegisterSerializer
+from person.serializers import PersonInputSerializer, RegisterSerializer, CoordinateDefineSerializer, PersonOutputSerializer
 from django.contrib.auth.models import User, AnonymousUser
 from person.models import Person
+from family.models import Family
 
 from django.db import transaction
 
@@ -13,6 +14,7 @@ class PersonView(APIView):
     def post(self, request):
         
         with transaction.atomic():
+            print(request.data)
             serializer = RegisterSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
@@ -28,19 +30,19 @@ class PersonView(APIView):
 
             new_Person.save()
 
-        return Response(PersonSerializer(new_Person).data)
+        return Response(PersonInputSerializer(new_Person).data)
     
     def get(self, request):
         if request.user == AnonymousUser():
             return Response({'error': 'You are not authenticated'}, status=401)
-        return Response(PersonSerializer(request.user.person).data)
+        return Response(PersonOutputSerializer(request.user.person).data)
     
     def put(self, request):
 
         if request.user == AnonymousUser():
             return Response({'error': 'You are not authenticated'}, status=401)
 
-        serializer = PersonSerializer(request.user.person, data=request.data, partial=True)
+        serializer = PersonInputSerializer(request.user.person, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -70,7 +72,7 @@ class OtherPeopleView(APIView):
         except Person.DoesNotExist:
             return Response({'error': 'Person not found'}, status=404)
         
-        return Response(PersonSerializer(person).data)
+        return Response(PersonOutputSerializer(person).data)
 
 class PeopleListView(APIView):
 
@@ -79,4 +81,63 @@ class PeopleListView(APIView):
             return Response({'error': 'You are not authenticated'}, status=401)
         
         people = Person.objects.all()
-        return Response(PersonSerializer(people, many=True).data)        
+        return Response(PersonOutputSerializer(people, many=True).data)        
+
+class DefineCoordinatesView(APIView):
+
+    def post(self, request):
+
+        if request.user == AnonymousUser():
+            return Response({'error': 'You are not authenticated'}, status=401)
+
+        serializer = CoordinateDefineSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+    
+        coordinates = serializer.validated_data['coordinates']
+
+        person = request.user.person
+
+        person.current_coordinates = coordinates
+
+        person.save()
+
+        return Response(serializer.data)
+    
+class DefineProfilePicture(APIView):
+
+    def post(self, request):
+
+        if request.user == AnonymousUser():
+            return Response({'error': 'You are not authenticated'}, status=401)
+
+        image = request.FILES.get('profile_image')
+
+        person = request.user.person
+
+        person.profile_picture = image
+        person.save()
+
+        return Response({'message': 'Profile picture updated successfully'})
+        
+class ChangeStatusView(APIView):
+
+    def post(self, request):
+
+        if request.user == AnonymousUser():
+            return Response({'error': 'You are not authenticated'}, status=401)
+        
+        status = request.data.get('status')
+
+        if status is None:
+            return Response({'error': 'status is required'}, status=400)
+        
+        if status not in Person.Status.values:
+            return Response({'error': 'Invalid status'}, status=400)
+
+        person = request.user.person
+
+        person.status = status
+        person.save()
+
+        return Response({'message': 'Status updated successfully'})
+    

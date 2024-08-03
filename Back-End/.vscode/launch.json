@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+
+  "configurations": [
+    {
+      "name": "Django: Runserver",
+
+      "python": "${command:python.interpreterPath}",
+
+      "type": "python",
+
+      "request": "launch",
+
+      "program": "${workspaceFolder}/manage.py",
+
+      "console": "internalConsole",
+
+      "args": ["runserver", "--noreload"],
+
+      "django": true
+    }
+  ]
+}

@@ -1,6 +1,29 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+class PersonManager(models.Manager):
+
+    def set_as_family_admin(self, person):
+        
+        if person.family is None:
+            raise ValueError('Person does not have a family')
+        
+        person.is_family_admin = True
+
+        person.save()
+
+    def change_family(self, person, family):
+
+        if person.is_family_admin:
+            person.is_family_admin = False
+
+        person.family = family
+
+        person.save()
+
+    
+
+
 # Create your models here.
 class Person(models.Model):
 
@@ -21,6 +44,9 @@ class Person(models.Model):
     family = models.ForeignKey('family.Family', on_delete=models.CASCADE, related_name='members', blank=True, null=True)
     current_coordinates = models.CharField(max_length=100, blank=True, null=True)
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='person', editable=False)
+    is_family_admin = models.BooleanField(default=False)
+
+    objects:PersonManager = PersonManager()
 
     def __str__(self):
         return f'{self.name} {self.family.surname}' if self.family else self.name
