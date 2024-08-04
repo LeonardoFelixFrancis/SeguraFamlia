@@ -30,3 +30,8 @@ class FamilyInvitationSerializer(ModelSerializer):
     class Meta:
         model = FamilyInvitation
         fields = '__all__'
+
+class FamilyKickOutSerializer(Serializer):
+
+    member_id = PrimaryKeyRelatedField(queryset=Person.objects.all())
+    admin_id = PrimaryKeyRelatedField(queryset=Person.objects.all())

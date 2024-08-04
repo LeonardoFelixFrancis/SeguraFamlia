@@ -18,6 +18,9 @@ class PersonView(APIView):
             serializer = RegisterSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
+            if User.objects.filter(username=serializer.validated_data['username']).exists():
+                return Response({'error': 'Username already exists'}, status=400)
+
             new_user = User.objects.create_user(username=serializer.validated_data['username'], 
                                     password=serializer.validated_data['password'])
             

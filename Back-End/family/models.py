@@ -35,6 +35,7 @@ class FamilyInvitation(models.Model):
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='invitations')
     inviter = models.ForeignKey('person.Person', on_delete=models.CASCADE, related_name='invitations_sent')
     invitee = models.ForeignKey('person.Person', on_delete=models.CASCADE, related_name='invitations_received')
+    accepted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
