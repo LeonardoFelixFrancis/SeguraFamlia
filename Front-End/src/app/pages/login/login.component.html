@@ -1,0 +1,44 @@
+<div class="container-wrapper">
+    <div class="login-container">
+
+        <h1>Safe Family</h1>
+
+        <mat-form-field>
+            <mat-label>Enter your username</mat-label>
+            <input
+                matInput
+                placeholder="pat@example.com"
+                [formControl]="username"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (username.invalid) {
+                <mat-error>{{usernameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input
+                matInput
+                placeholder="************"
+                [formControl]="password"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (username.invalid) {
+                <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        
+        <div class="bottom">
+            <button id="login-btn" mat-raised-button>Login</button>
+
+            <div class="register">
+                <a routerLink="/register" routerLinkActive="active" ariaCurrentWhenActive="page">Don't have an account? Register</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>

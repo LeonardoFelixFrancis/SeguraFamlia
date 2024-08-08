@@ -1,0 +1,102 @@
+<div class="container-wrapper">
+    <div class="register-container">
+
+        <h1>Safe Family</h1>
+
+        <mat-form-field>
+            <mat-label>Enter your username</mat-label>
+            <input
+                matInput
+                placeholder="pat@example.com"
+                [formControl]="username"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (username.invalid) {
+                <mat-error>{{usernameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input
+                matInput
+                placeholder="************"
+                [formControl]="password"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (username.invalid) {
+                <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Confirm password</mat-label>
+            <input
+                matInput
+                placeholder="************"
+                [formControl]="confirmPassword"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (confirmPassword.invalid) {
+                <mat-error>{{confirmPasswordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter your name</mat-label>
+            <input
+                matInput
+                placeholder="Pat"
+                [formControl]="name"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (name.invalid) {
+                <mat-error>{{nameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <!--age-->
+        <mat-form-field>
+            <mat-label>Enter your age</mat-label>
+            <input
+                matInput
+                placeholder="25"
+                [formControl]="age"
+                (blur)="updateErrorMessage()"
+                required
+            />
+            @if (age.invalid) {
+                <mat-error>{{ageErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <!--birthdate-->
+        <mat-form-field>
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="birthdate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            @if (birthdate.invalid) {
+                <mat-error>{{birthdateErrorMessage()}}</mat-error>
+            }
+
+        </mat-form-field>
+          
+        <div class="bottom">
+            <button id="register-btn" mat-raised-button>Register</button>
+
+            <div class="login">
+                <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Go back to login</a>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
