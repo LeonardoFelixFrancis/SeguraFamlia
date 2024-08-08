@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
+import { LoginService } from '../../core/services/login.service';
+
 
 @Component({
   selector: 'app-register',
@@ -31,7 +33,9 @@ export class RegisterComponent {
   ageErrorMessage = signal('');
   birthdateErrorMessage = signal('');
 
-  constructor() {
+  constructor(
+    private loginService: LoginService
+  ) {
     this.username.valueChanges.subscribe(() => this.updateErrorMessage());
     this.password.valueChanges.subscribe(() => this.updateErrorMessage());
     this.confirmPassword.valueChanges.subscribe(() => this.updateErrorMessage());
@@ -88,9 +92,33 @@ export class RegisterComponent {
       this.confirmPasswordErrorMessage.set('Passwords do not match');
     }
 
-    if (this.username.valid && this.password.valid && this.confirmPassword.valid && this.name.valid && this.age.valid && this.birthdate.valid) {
-      console.log('Register successful');
-    }
+    if (this.birthdate.value != null){
+      let bdate = new Date(this.birthdate.value);
+      let curr_birhdate = bdate.getFullYear() + '-' + (bdate.getMonth() + 1) + '-' + bdate.getDate();
+    
+
+      let data = {
+        username: this.username.value,
+        password: this.password.value,
+        name: this.name.value,
+        age: this.age.value,
+        birthdate: curr_birhdate
+      };
+    
+      this.loginService.register(data).subscribe(
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
+    } 
+
+    
+
+
   }
 
 

@@ -24,6 +24,7 @@ class PersonView(APIView):
             new_user = User.objects.create_user(username=serializer.validated_data['username'], 
                                     password=serializer.validated_data['password'])
             
+            
             new_Person = Person(name=serializer.validated_data['name'],
                                 age=serializer.validated_data['age'],
                                 birthdate=serializer.validated_data['birthdate'],
