@@ -1,0 +1,47 @@
+.home-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    height: 100vh;
+}
+
+.profile-info{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 98vh;
+    justify-content: start;
+    align-items: center;
+    margin: 10px;
+    background: linear-gradient(90deg, rgba(11, 53, 131, 0.5) 0%, rgba(0, 51, 146, 0.5) 100%);
+    box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.322);
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.img-wrapper{
+    width: 300px;
+    height: 300px;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+mat-form-field{
+    width: 80%;
+}

@@ -16,5 +16,9 @@ export class LoginService {
   register(data: any): Observable<any> {
     return this.httpClient.post('http://localhost:8000/api/person/', data);
   }
+
+  logout(): void {
+    localStorage.removeItem('token');
+  }
     
 }

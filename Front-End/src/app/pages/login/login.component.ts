@@ -6,6 +6,7 @@ import {MatInputModule} from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import {merge} from 'rxjs';
+import {LoginService} from '../../core/services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +22,11 @@ export class LoginComponent {
 
   usernameErrorMessage = signal('');
   passwordErrorMessage = signal('');
-  
-  constructor() {
+
+  constructor(
+    private loginService: LoginService,
+    private router: Router
+  ) {
     merge(this.username.statusChanges, this.username.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
@@ -46,9 +50,24 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.username.valid && this.password.valid) {
-      console.log('Login successful');
+    
+    if (this.username.invalid || this.password.invalid) {
+      return;
     }
+
+    this.loginService.login({
+      username: this.username.value,
+      password: this.password.value
+    }).subscribe(
+      (response) => {
+        localStorage.setItem('token', response.access);
+        this.router.navigate(['/home']);
+      },
+      (error) => {
+        console.error('Error logging in', error);
+      }
+    );
+
   }
 
 }
