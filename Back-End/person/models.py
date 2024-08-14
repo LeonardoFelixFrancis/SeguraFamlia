@@ -39,7 +39,7 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     birthdate = models.DateField()
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default='defaults/default.jpg')
     status = models.IntegerField(choices=Status.choices, default=Status.AT_HOME)
     family = models.ForeignKey('family.Family', on_delete=models.CASCADE, related_name='members', blank=True, null=True)
     current_coordinates = models.CharField(max_length=100, blank=True, null=True)

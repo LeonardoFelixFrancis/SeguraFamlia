@@ -4,33 +4,71 @@
 
         <div class="img-wrapper">
 
-            <img [src]="profile_picture()" alt="">
+            <img [src]="profile_picture()" alt="" (click)="openImagePicker()" >
+            <input id="image-piccker" type="file" hidden="true" (change)="onFileChange($event)">
 
         </div>
 
         <div class="info">
 
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input
-                    matInput
-                    placeholder="pat@example.com"
-                    [formControl]="name"
-                    required
-                />
-            </mat-form-field>
-    
-            <mat-form-field>
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" [formControl]="birthdate">
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+            @if(is_editing){
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input
+                        matInput
+                        placeholder="pat@example.com"
+                        [formControl]="name"
+                        required
+                    />
+                </mat-form-field>
+        
+                <mat-form-field>
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="picker" [formControl]="birthdate">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle  matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker ></mat-datepicker>
+        
+                </mat-form-field>
+                
+                <div class="button-container">
+                    <button mat-raised-button color="primary" (click)="save()">Save</button>
+                    
+                    <button mat-raised-button color="warn" (click)="changeEditState()">Cancel</button>
+                </div>
 
-    
-            </mat-form-field>
+            }@else{
+                <h1>{{ name.value }}</h1>
+                <p>{{ birthdate.value | date:'M/d/y' }}</p>
+
+                <mat-icon aria-hidden="false" aria-label="edit icon" fontIcon="edit" (click)="changeEditState()"></mat-icon>
+            }
+            
+            
 
         </div>  
+
+    </div>
+
+    <div class="family-info-container">
+
+        @if(user_family().id === null){
+            <div class="upper-sec">
+
+                <h2>Family</h2>
+
+                <button mat-raised-button color="primary" (click)="create_family()">Create Family</button>
+
+            </div>
+        }
+
+        @if(user_family().id !== null){
+            <div class="upper-sec">
+
+                <h2>{{user_family().surname}}</h2>
+
+            </div>
+        }
 
     </div>
 

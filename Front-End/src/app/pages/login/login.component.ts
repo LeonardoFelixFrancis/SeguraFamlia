@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -15,13 +15,17 @@ import {LoginService} from '../../core/services/login.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   username = new FormControl('', [Validators.required]);
   password = new FormControl('', [Validators.required]);
 
   usernameErrorMessage = signal('');
   passwordErrorMessage = signal('');
+
+  ngOnInit(): void {
+    localStorage.removeItem('token');
+  }
 
   constructor(
     private loginService: LoginService,

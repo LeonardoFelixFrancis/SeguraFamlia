@@ -12,7 +12,7 @@ import { LoginService } from '../../core/services/login.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [],
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, RouterLink, MatDatepickerModule, MatCalendar],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -92,27 +92,22 @@ export class RegisterComponent {
       this.confirmPasswordErrorMessage.set('Passwords do not match');
     }
 
-    if (this.birthdate.value != null){
-      let bdate = new Date(this.birthdate.value);
-      let curr_birhdate = bdate.getFullYear() + '-' + (bdate.getMonth() + 1) + '-' + bdate.getDate();
-    
-
-      let data = {
-        username: this.username.value,
-        password: this.password.value,
-        name: this.name.value,
-        age: this.age.value,
-        birthdate: curr_birhdate
-      };
-    
-      this.loginService.register(data).subscribe(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    let data = {
+      username: this.username.value,
+      password: this.password.value,
+      name: this.name.value,
+      age: this.age.value,
+      birthdate: this.birthdate.value
+    };
+  
+    this.loginService.register(data).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
     } 
 
@@ -122,4 +117,4 @@ export class RegisterComponent {
   }
 
 
-}
+
