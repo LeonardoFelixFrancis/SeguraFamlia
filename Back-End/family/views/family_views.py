@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from family.models import Family, FamilyInvitation
 from rest_framework.response import Response
 from family.serializers import FamilySerializer, FamilyInvitationSerializer, FamilyKickOutSerializer
@@ -8,9 +10,11 @@ from django.contrib.auth.models import User, AnonymousUser
 from family.services.family_service import FamilyService
 # Create your views here.
 
-class FamilyView(APIView):
+class FamilyView(viewsets.ViewSet):
 
-    def post(self, request):
+    family_service = FamilyService()
+
+    def create(self, request):
 
         with transaction.atomic():
             
@@ -19,11 +23,15 @@ class FamilyView(APIView):
 
             serializer = FamilySerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            family = serializer.save()
+
+            request.user.person.family = family
+            request.user.person.save()
         
             return Response(serializer.data)
     
-    def get(self, request):
+    @action(detail=False, methods=['get'], url_path='get-user-family')
+    def get_user_family(self, request):
         
         if request.user == AnonymousUser():
             return Response({'error': 'You are not authenticated'}, status=401)
@@ -39,7 +47,7 @@ class FamilyView(APIView):
 
         return Response(serializer.data)
     
-    def put(self, request):
+    def update(self, request):
             
         with transaction.atomic():
             
@@ -53,19 +61,25 @@ class FamilyView(APIView):
 
         return Response(serializer.data)
     
-    def delete(self, request):
+    def delete(self, request, pk):
+
+        id = pk
         
         with transaction.atomic():
-            family = Family.objects.get(pk=request.data['id'])
+            family = Family.objects.get(pk=id)
+
+            members = family.members.all()
+
+            for member in members:
+                member.family = None
+                member.save()
+
             family.delete()
         
         return Response({'message': 'Family deleted successfully'})
     
-class InviteForFamilyView(APIView):
-
-    family_service = FamilyService()
-
-    def post(self, request):
+    @action(detail=False, methods=['post'])
+    def invite_for_family(self, request):
 
         with transaction.atomic():
             
@@ -85,10 +99,9 @@ class InviteForFamilyView(APIView):
         
             return Response(serializer.data)
         
-class AcceptFamilyInvitationView(APIView):
-
-    def post(self, request):
-
+    @action(detail=False, methods=['post'], url_path='accept-invitation')
+    def accept_family_invitation(self, request):
+        
         with transaction.atomic():
             
             if request.user == AnonymousUser():
@@ -114,12 +127,9 @@ class AcceptFamilyInvitationView(APIView):
             family_invitation.save()
 
             return Response({'message': 'Family invitation accepted successfully'})
-        
-class FamilyKickOutMemberView(APIView):
-
-    family_service = FamilyService()
-
-    def post(self, request):
+    
+    @action(detail=False, methods=['post'], url_path='kick-out')
+    def kick_out_member(self, request):
 
         with transaction.atomic():
 

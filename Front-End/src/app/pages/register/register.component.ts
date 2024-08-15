@@ -5,14 +5,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
+
+import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+
 import { LoginService } from '../../core/services/login.service';
 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  providers: [],
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
+    provideMomentDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, RouterLink, MatDatepickerModule, MatCalendar],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -92,12 +97,18 @@ export class RegisterComponent {
       this.confirmPasswordErrorMessage.set('Passwords do not match');
     }
 
+    let date = null;
+    if (this.birthdate.value !== null){
+      date = new Date(this.birthdate.value);
+      date = date.toLocaleDateString('en-US');
+    }
+
     let data = {
       username: this.username.value,
       password: this.password.value,
       name: this.name.value,
       age: this.age.value,
-      birthdate: this.birthdate.value
+      birthdate: date
     };
   
     this.loginService.register(data).subscribe(

@@ -52,24 +52,41 @@
 
     <div class="family-info-container">
 
-        @if(user_family().id === null){
-            <div class="upper-sec">
+        <div class="family-container-header">
+            @if(user_family().id === null){
+                <div class="upper-sec">
 
-                <h2>Family</h2>
+                    <h2>Family</h2>
 
-                <button mat-raised-button color="primary" (click)="create_family()">Create Family</button>
+                    <button mat-raised-button color="primary" (click)="create_family()">Create Family</button>
 
-            </div>
-        }
+                </div>
+            }
 
-        @if(user_family().id !== null){
-            <div class="upper-sec">
+            @if(user_family().id !== null){
+                <div class="upper-sec">
+                    
+                    <div class="family-sec">
+                        <h2>{{user_family().surname}}</h2>
 
-                <h2>{{user_family().surname}}</h2>
+                        <mat-icon aria-hidden="false" aria-label="delete icon" fontIcon="delete" (click)="deleteFamily()"></mat-icon>
+                    </div>
 
-            </div>
-        }
+                    <h3>Address: {{user_family().address}}</h3>
+
+                    <h3>Phone Number: {{user_family().phone_number}}</h3>
+
+
+                </div>
+            }
+        </div>
+
+        <div class="family-info-main">
+        
+        </div>
 
     </div>
+
+    
 
 </div>

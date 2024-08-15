@@ -10,7 +10,7 @@ class RegisterSerializer(Serializer):
     password = CharField()
     name = CharField()
     age = IntegerField()
-    birthdate = DateField()
+    birthdate = DateField(input_formats=['%m/%d/%Y'])
 
 class PersonOutputSerializer(ModelSerializer):
 

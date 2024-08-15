@@ -41,7 +41,7 @@ class Person(models.Model):
     birthdate = models.DateField()
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default='defaults/default.jpg')
     status = models.IntegerField(choices=Status.choices, default=Status.AT_HOME)
-    family = models.ForeignKey('family.Family', on_delete=models.CASCADE, related_name='members', blank=True, null=True)
+    family = models.ForeignKey('family.Family', on_delete=models.DO_NOTHING, related_name='members', blank=True, null=True)
     current_coordinates = models.CharField(max_length=100, blank=True, null=True)
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='person', editable=False)
     is_family_admin = models.BooleanField(default=False)

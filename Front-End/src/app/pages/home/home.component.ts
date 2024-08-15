@@ -15,6 +15,9 @@ import { Family } from '../../core/models/family_model';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateFamilyComponent } from '../../dialogs/create-family/create-family.component';
 import { MatDialogConfig } from '@angular/material/dialog';
+import { FamilyService } from '../../core/services/family.service';
+import { DeleteFamilyComponent } from '../../dialogs/delete-family/delete-family.component';
+
 
 @Component({
   selector: 'app-home',
@@ -47,6 +50,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router, 
     private personService: PersonService,
+    private familyService: FamilyService,
     private dialogRef: MatDialog
   ) { }
 
@@ -56,6 +60,11 @@ export class HomeComponent implements OnInit {
       this.name.setValue(data.name);
       this.birthdate.setValue(data.birthdate);
     });
+
+    this.familyService.get().subscribe((data) => {
+      this.user_family.set(data);
+    });
+
   }
 
   save(){
@@ -114,7 +123,18 @@ export class HomeComponent implements OnInit {
   }
 
   create_family(){
-    const dialogRef = this.dialogRef.open(CreateFamilyComponent);
+    const dialogRef = this.dialogRef.open(CreateFamilyComponent, {width: '800px', height: '600px'});
+  }
+
+  deleteFamily(){
+    const dialogRef = this.dialogRef.open(DeleteFamilyComponent, {width: '400px', height: '300px'});
+    if (this.user_family().id !== null){
+      let family_id = this.user_family().id as number;
+
+      dialogRef.componentInstance.family_id = family_id;
+    }
+
+
   }
 
 }
